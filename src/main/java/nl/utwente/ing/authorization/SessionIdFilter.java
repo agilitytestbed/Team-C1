@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static javax.servlet.http.HttpUtils.parseQueryString;
+
 @Component
 public class SessionIdFilter extends GenericFilterBean {
     private static final String AUTHENTICATION_HEADER = "X-Session-ID";
@@ -34,8 +36,12 @@ public class SessionIdFilter extends GenericFilterBean {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
             String id = httpServletRequest.getHeader(AUTHENTICATION_HEADER);
+            String[] queryId = parseQueryString(httpServletRequest.getQueryString()).getOrDefault("session_id", null);
             if (id != null && this.sessionService.verifyById(id)) {
                 SecurityContextHolder.getContext().setAuthentication(new SessionIdAuthentication(id, true));
+                filterChain.doFilter(servletRequest, servletResponse);
+            } else if (queryId != null && this.sessionService.verifyById(queryId[0])) {
+                SecurityContextHolder.getContext().setAuthentication(new SessionIdAuthentication(queryId[0], true));
                 filterChain.doFilter(servletRequest, servletResponse);
             } else {
                 httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Session ID missing or invalid.");
