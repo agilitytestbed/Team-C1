@@ -36,7 +36,14 @@ public class SessionIdFilter extends GenericFilterBean {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
             String id = httpServletRequest.getHeader(AUTHENTICATION_HEADER);
-            String[] queryId = parseQueryString(httpServletRequest.getQueryString()).getOrDefault("session_id", null);
+            String urlQuery = httpServletRequest.getQueryString();
+            String[] queryId;
+            if (urlQuery != null) {
+                queryId = parseQueryString(httpServletRequest.getQueryString()).getOrDefault("session_id", null);
+            } else {
+                queryId = null;
+            }
+
             if (id != null && this.sessionService.verifyById(id)) {
                 SecurityContextHolder.getContext().setAuthentication(new SessionIdAuthentication(id, true));
                 filterChain.doFilter(servletRequest, servletResponse);
