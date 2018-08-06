@@ -1,6 +1,7 @@
 package nl.utwente.ing.session;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import nl.utwente.ing.category.Category;
 import nl.utwente.ing.transaction.Transaction;
@@ -15,6 +16,7 @@ import java.util.List;
 @Entity
 @Table(name = "Session")
 @JsonPropertyOrder({"id"})
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Session implements Serializable {
 
     @Id
@@ -29,6 +31,7 @@ public class Session implements Serializable {
     private List<Category> categories;
 
     public Session() {
+
     }
 
     public String getId() {

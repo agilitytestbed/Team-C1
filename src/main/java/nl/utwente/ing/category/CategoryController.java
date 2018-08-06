@@ -63,7 +63,7 @@ public class CategoryController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity updateCategory(@PathVariable Long id, @RequestBody Category data) {
-        if (data.getName() == null) {
+        if (data.getId() != null || data.getName() == null) {
             throw new InvalidInputException();
         }
         Category category = this.categoryService.findBySessionAndId(this.sessionService.getCurrent(), id);

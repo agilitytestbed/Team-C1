@@ -52,6 +52,9 @@ public class TransactionController {
 
     @RequestMapping(method = RequestMethod.POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity createTransaction(@RequestBody Transaction data) {
+        if (data.getDate() == null || data.getAmount() == null || data.getExternalIBAN() == null || data.getType() == null) {
+            throw new InvalidInputException();
+        }
         data.setSession(sessionService.getCurrent());
         Transaction transaction = transactionService.create(data);
         return new ResponseEntity<>(transaction, HttpStatus.CREATED);
