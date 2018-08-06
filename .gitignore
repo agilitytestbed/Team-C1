@@ -1,8 +1,5 @@
-.idea/*
-out/*
-target/*
+/.idea/*
+/target/*
 
-*.iml
-*.db
-
-!pom.xml
+/database.mv.db
+/DPA.iml
