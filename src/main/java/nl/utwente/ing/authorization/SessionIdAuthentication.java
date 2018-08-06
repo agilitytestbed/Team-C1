@@ -10,9 +10,9 @@ public class SessionIdAuthentication implements Authentication {
     private String id;
     private boolean authenticated;
 
-    SessionIdAuthentication(String id, boolean authenticated) {
+    SessionIdAuthentication(String id) {
         this.id = id;
-        this.authenticated = authenticated;
+        this.authenticated = true;
     }
 
     @Override

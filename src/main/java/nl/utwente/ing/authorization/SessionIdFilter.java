@@ -33,9 +33,14 @@ public class SessionIdFilter extends GenericFilterBean {
         if (httpServletRequest.getRequestURI().equals(httpServletRequest.getContextPath() + SESSIONS_PATH) && ((HttpServletRequest) servletRequest).getMethod().equals(METHOD_POST)) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
-            String id = httpServletRequest.getHeader(AUTHENTICATION_HEADER);
-            if (id != null && this.sessionService.verifyById(id)) {
-                SecurityContextHolder.getContext().setAuthentication(new SessionIdAuthentication(id, true));
+            String headerId = httpServletRequest.getHeader(AUTHENTICATION_HEADER);
+            String urlId = httpServletRequest.getParameter("session_id");
+
+            if (headerId != null && this.sessionService.verifyById(headerId)) {
+                SecurityContextHolder.getContext().setAuthentication(new SessionIdAuthentication(headerId));
+                filterChain.doFilter(servletRequest, servletResponse);
+            } else if (urlId != null && this.sessionService.verifyById(urlId)) {
+                SecurityContextHolder.getContext().setAuthentication(new SessionIdAuthentication(urlId));
                 filterChain.doFilter(servletRequest, servletResponse);
             } else {
                 httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Session ID missing or invalid.");
